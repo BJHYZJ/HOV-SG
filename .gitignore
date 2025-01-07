@@ -9,3 +9,11 @@ __pycache__/
 /data/scene_graphs
 /outputs
 checkpoints/
+hovsg/data/hm3dsem/hm3d
+hovsg/data/hm3dsem_walks
+hovsg/data/Replica_original
+hovsg/data/Replica_RGBD
+hovsg/data/Replica-Dataset
+hovsg/data/scene_graphs
+hovsg/data/sem_seg
+hovsg/assets

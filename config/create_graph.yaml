@@ -3,10 +3,10 @@ main:
   dataset: hm3dsem # scannet, replica
   scene_id: 00824-Dd4bFSTQ8gi # scene0011_00
   split: val
-  package_path: /home/SOME_USERNAME/HOV-SG/hovsg/
-  dataset_path: /home/SOME_USERNAME/data/hm3dsem_walks/
-  raw_data_path: /data/hovsg/hm3dsem/data/versioned_data/hm3d-0.2/hm3d
-  save_path: /home/SOME_USERNAME/data/hovsg/
+  package_path: /home/yanzj/workspace/code/HOV-SG/hovsg/
+  dataset_path: /home/yanzj/workspace/code/HOV-SG/hovsg/data/hm3dsem_walks/
+  raw_data_path: /home/yanzj/workspace/code/HOV-SG/hovsg/data/hm3dsem/hm3d/
+  save_path: /home/yanzj/workspace/code/HOV-SG/hovsg/data/hovsg/
 dataset:
   hm3dsem:
     gt_skip_frames: 2
@@ -38,7 +38,7 @@ pipeline:
   min_pcd_points: 100
   depth_weighting: false
   grid_resolution: 0.05
-  merge_type: sequential # hierarchical, sequential
+  merge_type: hierarchical # hierarchical, sequential
   save_intermediate_results: false
   obj_labels: HM3DSEM_LABELS
   merge_objects_graph: false
