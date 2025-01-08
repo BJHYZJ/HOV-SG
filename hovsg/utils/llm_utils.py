@@ -4,6 +4,7 @@ from typing import Dict, List, Tuple, Union
 
 import openai
 
+openai_url = f"https://api.openai.com/v1" if os.environ["OPENAI_URL"] is None else os.environ["OPENAI_URL"]
 
 def infer_floor_id_from_query(floor_ids: List[int], query: str) -> int:
     """return the floor id from the floor_ids_list that match with the query
@@ -19,6 +20,7 @@ def infer_floor_id_from_query(floor_ids: List[int], query: str) -> int:
     floor_ids_str = ", ".join(floor_ids_str)
 
     openai_key = os.environ["OPENAI_KEY"]
+    openai.base_url = openai_url
     openai.api_key = openai_key
     question = f"""
 You are a floor detector. You can infer the floor number based on a query.
@@ -57,7 +59,7 @@ def infer_room_type_from_object_list_chat(
     """
     openai_key = os.environ["OPENAI_KEY"]
     openai.api_key = openai_key
-    client = openai.OpenAI(api_key=openai_key)
+    client = openai.OpenAI(api_key=openai_key, base_url=openai_url)
     room_types = ""
     if default_room_type is not None:
         room_types = ", ".join(default_room_type)
@@ -173,7 +175,7 @@ def parse_hier_query(params, instruction: str) -> Tuple[str, str, str]:
     """
     openai_key = os.environ["OPENAI_KEY"]
     openai.api_key = openai_key
-    client = openai.OpenAI(api_key=openai_key)
+    client = openai.OpenAI(api_key=openai_key, base_url=openai_url)
 
     # Depending on the query spec, parse the query differently:
     if set(params.main.long_query.spec) == {"obj", "room", "floor"}:
@@ -221,10 +223,9 @@ def parse_floor_room_object_gpt35(instruction: str) -> Tuple[str, str, str]:
     Parse long language query into a list of short queries at floor, room, and object level
     Example: "mirror in region bathroom on floor 0" -> ("floor 0", "bathroom", "mirror")
     """
-
     openai_key = os.environ["OPENAI_KEY"]
     openai.api_key = openai_key
-    client = openai.OpenAI(api_key=openai_key)
+    client = openai.OpenAI(api_key=openai_key, base_url=openai_url)
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[

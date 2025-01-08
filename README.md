@@ -101,7 +101,8 @@ We used the following scenes from the Habitat Matterport 3D Semantics dataset in
 1. Our method requires posed input data. Because of that, we recorded trajectories for each sequence we evaluate on. We provide a script (`hovsg/data/hm3dsem/gen_hm3dsem_walks_from_poses.py`) that turns a set of camera poses (`hovsg/data/hm3dsem/metadata/poses`) into a sequence of RGB-D observations using the [habitat-sim](https://github.com/facebookresearch/habitat-sim) simulator. The output includes RGB, depth, poses and frame-wise semantic/panoptic ground truth:
 ```bash
   # python data/habitat/gen_hm3dsem_from_poses.py --dataset_dir <hm3dsem_dir> --save_dir data/hm3dsem_walks/
-  python data/habitat/gen_hm3dsem_from_poses.py --dataset_dir data/hm3dsem --save_dir data/hm3dsem_walks/ --pose_dir hovsg/data/hm3dsem/metadata/poses
+  # hm3dsem
+  python data/hm3dsem/gen_hm3dsem_walks_from_poses.py --dataset_dir data/hm3dsem --save_dir data/hm3dsem_walks/ --pose_dir hovsg/data/hm3dsem/metadata/poses
 ```
 
 2. Secondly, we construct a new hierarchical graph-structured dataset that is called `hm3dsem_walks` that includes ground truth based on all observations recorded. To produce this ground-truth data please execute the following: First, define the following config paths: `main.package_path`, `main.dataset_path`, `main.raw_data_path`, and `main.save_path` under `config/create_graph.yaml`. For each scene, define the `main.scene_id`, `main.split`. Next, execute the following to obtain floor-, region-, and object-level ground truth data per scene. We utilize every recorded frame without skipping (see parameter `dataset.hm3dsem.gt_skip_frames`) and recommend 128 GB of RAM to compile this as the scenes differ in size:
@@ -213,7 +214,9 @@ The Data folder should have the following structure:
 
 ### Create scene graphs (only for Habitat Matterport 3D Semantics):
 ```bash
-python application/create_graph.py main.dataset=hm3dsem main.dataset_path=data/hm3dsem_walks/val/00824-Dd4bFSTQ8gi/ main.save_path=data/scene_graphs/00824-Dd4bFSTQ8gi
+# python application/create_graph.py main.dataset=hm3dsem main.dataset_path=data/hm3dsem_walks/val/00824-Dd4bFSTQ8gi/ main.save_path=data/scene_graphs/00824-Dd4bFSTQ8gi
+
+python application/create_graph.py main.dataset=hm3dsem main.dataset_path=hovsg/data/hm3dsem_walks/val/00824-Dd4bFSTQ8gi/ main.save_path=hovsg/data/scene_graphs/
 ```
 <details>
   <summary>This will generate a scene graph for the specified RGB-D sequence and save it. The following files are generated:</summary>
@@ -248,7 +251,8 @@ The `graph` folder contains the generated scene graph hierarchy, the first numbe
 
 ### Visualize scene graph
 ```bash
-python application/visualize_graph.py graph_path=data/scene_graphs/hm3dsem/00824-Dd4bFSTQ8gi/graph
+# python application/visualize_graph.py graph_path=data/scene_graphs/hm3dsem/00824-Dd4bFSTQ8gi/graph
+python application/visualize_graph.py graph_path=hovsg/data/scene_graphs/hm3dsem/00824-Dd4bFSTQ8gi/graph
 ```
 ![hovsg_graph_vis](media/hovsg_graph_vis.gif)
 
@@ -262,19 +266,19 @@ In order to test graph queries with HOV-SG, you need to setup an OpenAI API acco
 
 #### Evaluate query against pre-built hierarchical scene graph 
 ```bash
-python application/visualize_query_graph.py main.graph_path=data/scene_graphs/hm3dsem/00824-Dd4bFSTQ8gi/graph
+python application/visualize_query_graph.py main.graph_path=hovsg/data/scene_graphs/hm3dsem/00824-Dd4bFSTQ8gi/graph
 ```
 After launching the code, you will be asked to input the hierarchical query. An example is `chair in the living room on floor 0`. You can see the visualization of the top 5 target objects and the room it lies in.
 ![hovsg_graph_query](media/hovsg_graph_query.gif)
 
 ### Extract feature map for semantic segmentation (only ScanNet and Replica)
 ```bash
-python application/semantic_segmentation.py main.dataset=replica main.dataset_path=Replica/office0 main.save_path=data/sem_seg/office0
+python application/semantic_segmentation.py main.dataset=replica main.scene_id=office0 main.dataset=replica main.dataset_path=hovsg/data/Replica_RGBD/Replica/office0 main.save_path=hovsg/data/sem_seg/Replica/office0
 ```
 
 ### Evaluate semantic segmentation (only ScanNet and Replica)
 ```bash
-python application/eval/evaluate_sem_seg.py dataset=replica scene_name=office0 feature_map_path=data/sem_seg/office0
+python application/eval/evaluate_sem_seg.py main.dataset=replica main.scene_name=office_0 main.feature_map_path=hovsg/data/sem_seg/Replica/office0
 ```
 
 ### Evaluate predicted scene graphs (only Habitat 3D Semantics)

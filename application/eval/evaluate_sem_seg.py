@@ -55,7 +55,7 @@ def main(params: DictConfig):
     clip_model.eval()
 
     # Load Feature Map
-    masked_pcd, mask_feats = load_feature_map(params.main.feature_map_path)
+    masked_pcd, mask_feats = load_feature_map(os.path.join(params.main.feature_map_path, params.main.dataset))
     # read semantic classes
     scene_name = params.main.scene_name
     if params.main.dataset == "scannet":

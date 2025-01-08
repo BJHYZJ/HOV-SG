@@ -2,8 +2,8 @@ main:
   device: cuda
   dataset: replica # scannet, replica
   scene_id: office0 # scene0011_00
-  dataset_path: /data/SOME_USERNAME/hm3dsem_walks/val/00824-Dd4bFSTQ8gi
-  save_path: /data/SOME_USERNAME/hovsg/
+  dataset_path: hovsg/data/Replica_RGBD/Replica/office0
+  save_path: hovsg/data/sem_seg/
 models:
   clip:
     type:  ViT-H-14 # ViT-L/14@336px # ViT-H-14
@@ -19,7 +19,7 @@ models:
     stability_score_thresh: 0.95
     min_mask_region_area: 100
 pipeline:
-  voxel_size: 0.02
+  voxel_size: 0.05
   skip_frames: 10
   init_overlap_thresh: 0.75
   overlap_thresh_factor: 0.025
